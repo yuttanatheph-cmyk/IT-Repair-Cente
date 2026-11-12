@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ฟอร์มแจ้งซ่อมอุปกรณ์ไอที - IT Repair Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * { font-family: 'Prompt', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.82)), url('bg.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; color: #2b3445;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08); padding: 15px 30px;
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+        }
+        .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: #0d6efd; }
+        .container { max-width: 900px; margin: 35px auto; padding: 0 20px; }
+        .form-card {
+            background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px);
+            border-radius: 16px; padding: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .form-header { margin-bottom: 25px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .form-header h2 { font-size: 1.4rem; color: #0d6efd; display: flex; align-items: center; gap: 10px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: #334155; }
+        .req { color: #dc3545; }
+        .form-input { width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; outline: none; background: #f8fafc; }
+        .form-input:focus { border-color: #0d6efd; background: white; box-shadow: 0 0 0 4px rgba(13,110,253,0.15); }
+        .file-drop-zone { border: 2px dashed #cbd5e1; background: #f8fafc; border-radius: 8px; padding: 25px; text-align: center; position: relative; cursor: pointer; }
+        .file-drop-zone:hover { border-color: #0d6efd; background: #f0f4f9; }
+        .file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .form-footer { margin-top: 30px; text-align: right; }
+        .btn-submit-form {
+            background: #0d6efd; color: white; border: none; padding: 14px 30px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+        }
+        .btn-submit-form:hover { background: #0b5ed7; transform: translateY(-2px); }
+        .btn-submit-form:active { transform: scale(0.97); }
+        .btn-back-home {
+            background: #f1f5f9; color: #475569; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;
+        }
+        .btn-back-home:hover { background: #e2e8f0; }
+        /* Modal Success */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: white; width: 100%; max-width: 400px; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        .modal-icon { width: 60px; height: 60px; border-radius: 50%; background: #dcfce7; color: #16a34a; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; }
+        @media(max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand"><i class="fa-solid fa-laptop-medical"></i><span>IT Repair Service</span></div>
+        <a href="home.html" class="btn-back-home"><i class="fa-solid fa-arrow-left"></i> กลับหน้าแรก</a>
+    </nav>
+
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2><i class="fa-solid fa-pen-to-square"></i> แบบฟอร์มแจ้งซ่อมอุปกรณ์ไอที</h2>
+            </div>
+            <form id="repairForm" onsubmit="submitRepairForm(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>ชื่อ-นามสกุล ผู้แจ้ง <span class="req">*</span></label>
+                        <input type="text" id="userName" class="form-input" placeholder="ระบุชื่อของคุณ" required>
+                    </div>
+                    <div class="form-group">
+                        <label>แผนก / ภายใน <span class="req">*</span></label>
+                        <input type="text" id="userDept" class="form-input" placeholder="เช่น แผนกบุคคล, ไอที, การเงิน" required>
+                    </div>
+                    <div class="form-group">
+                        <label>เบอร์โทรศัพท์ติดต่อ <span class="req">*</span></label>
+                        <input type="text" id="userTel" class="form-input" placeholder="เบอร์ภายในหรือมือถือ" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ประเภทอุปกรณ์ <span class="req">*</span></label>
+                        <select id="deviceType" class="form-input" required>
+                            <option value="">-- เลือกอุปกรณ์ --</option>
+                            <option value="PC / คอมพิวเตอร์ตั้งโต๊ะ">PC / คอมพิวเตอร์ตั้งโต๊ะ</option>
+                            <option value="Laptop / โน้ตบุ๊ก">Laptop / โน้ตบุ๊ก</option>
+                            <option value="Printer / เครื่องปริ้นเตอร์">Printer / เครื่องปริ้นเตอร์</option>
+                            <option value="Network / ระบบเครือข่าย/อินเทอร์เน็ต">Network / ระบบเครือข่าย/อินเทอร์เน็ต</option>
+                            <option value="Other / อื่นๆ">Other / อื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>อาการเสีย / รายละเอียดปัญหา <span class="req">*</span></label>
+                        <textarea id="issueDesc" class="form-input textarea" rows="4" placeholder="อธิบายอาการเสียโดยละเอียด..." required></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>แนบรูปภาพอาการเสีย (ถ้ามี)</label>
+                        <div class="file-drop-zone">
+                            <i class="fa-solid fa-cloud-arrow-up file-icon" style="font-size: 2rem; color: #0d6efd; margin-bottom: 8px;"></i>
+                            <div style="font-size: 0.9rem; color: #475569;">คลิกเพื่อเลือกไฟล์รูปภาพ หรือลากมาวางที่นี่</div>
+                            <input type="file" id="fileUpload" class="file-input" accept="image/*" onchange="document.getElementById('fileNameText').textContent = this.files[0] ? this.files[0].name : ''">
+                            <div id="fileNameText" style="margin-top: 6px; font-weight: 600; color: #0d6efd; font-size: 0.85rem;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <button type="submit" class="btn-submit-form"><i class="fa-solid fa-paper-plane"></i> ส่งใบแจ้งซ่อม</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Success -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon"><i class="fa-solid fa-check"></i></div>
+            <h3 style="color: #1e293b; margin-bottom: 8px;">ส่งใบแจ้งซ่อมสำเร็จ!</h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">เจ้าหน้าที่ได้รับข้อมูลของคุณเรียบร้อยแล้ว สามารถติดตามสถานะได้ทันที</p>
+            <button type="button" class="btn-submit-form" style="width: 100%; padding: 10px;" onclick="window.location.href='home.html'">กลับสู่หน้าแรก</button>
+        </div>
+    </div>
+
+    <script>
+        function submitRepairForm(event) {
+            event.preventDefault();
+            const newReq = {
+                id: 'REP-' + Math.floor(1000 + Math.random() * 9000),
+                date: new Date().toLocaleDateString('th-TH') + ' ' + new Date().toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'}),
+                name: document.getElementById('userName').value,
+                department: document.getElementById('userDept').value,
+                tel: document.getElementById('userTel').value,
+                device: document.getElementById('deviceType').value,
+                issue: document.getElementById('issueDesc').value,
+                status: 'รอดำเนินการ'
+            };
+
+            const existing = JSON.parse(localStorage.getItem('repairRequests')) || [];
+            existing.unshift(newReq);
+            localStorage.setItem('repairRequests', JSON.stringify(existing));
+
+            document.getElementById('successModal').classList.add('active');
+        }
+    </script>
+</body>
+</html>

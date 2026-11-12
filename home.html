@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบแจ้งซ่อมคอมพิวเตอร์ออนไลน์ - IT Repair Service</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * { font-family: 'Prompt', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: linear-gradient(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.78)), url('bg.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat;
+            min-height: 100vh; color: #2b3445; display: flex; flex-direction: column;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08); padding: 15px 30px;
+            position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.2rem; color: #0d6efd; }
+        .system-status-badge { display: flex; align-items: center; gap: 8px; background: rgba(22, 163, 74, 0.12); color: #15803d; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .status-dot { width: 8px; height: 8px; background-color: #16a34a; border-radius: 50%; box-shadow: 0 0 8px #16a34a; }
+        .hero-section {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+            padding: 40px 20px; max-width: 1050px; margin: 0 auto; width: 100%;
+        }
+        .hero-icon {
+            font-size: 3.2rem; color: #0d6efd; margin-bottom: 18px; background: rgba(255, 255, 255, 0.92);
+            width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.18);
+        }
+        .hero-title { font-size: 2.5rem; font-weight: 700; color: #0d6efd; margin-bottom: 12px; text-shadow: 0 2px 12px rgba(255, 255, 255, 0.9); }
+        .hero-subtitle { font-size: 1.1rem; color: #1e293b; font-weight: 500; margin-bottom: 30px; max-width: 650px; line-height: 1.6; }
+        .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 25px; }
+        .btn-main {
+            padding: 14px 28px; border-radius: 10px; font-size: 1.05rem; font-weight: 600; text-decoration: none;
+            display: flex; align-items: center; gap: 10px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); cursor: pointer; border: none;
+        }
+        .btn-main:active { transform: scale(0.96); }
+        .btn-primary-custom { background-color: #0d6efd; color: white !important; }
+        .btn-primary-custom:hover { background-color: #0b5ed7; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3); }
+        .btn-outline-custom { background-color: rgba(255, 255, 255, 0.95); color: #0d6efd !important; border: 2px solid #0d6efd; }
+        .btn-outline-custom:hover { background-color: #ffffff; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(13, 110, 253, 0.2); }
+        .quick-track-box {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 12px 16px; border-radius: 12px;
+            display: flex; gap: 10px; width: 100%; max-width: 540px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+            border: 1px solid rgba(13, 110, 253, 0.2); margin-bottom: 35px;
+        }
+        .quick-track-box input { flex: 1; border: none; background: transparent; padding: 8px 12px; font-size: 0.95rem; outline: none; color: #1e293b; }
+        .quick-track-box button { background: #0d6efd; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; max-width: 750px; margin-bottom: 35px; }
+        .stat-pill { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(8px); padding: 15px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); }
+        .stat-pill .num { font-size: 1.6rem; font-weight: 700; color: #0d6efd; }
+        .stat-pill .num.yellow { color: #d97706; }
+        .stat-pill .num.green { color: #16a34a; }
+        .stat-pill .label { font-size: 0.85rem; color: #475569; font-weight: 500; margin-top: 4px; }
+        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; width: 100%; text-align: left; }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px); padding: 20px 22px; border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); display: flex; align-items: flex-start; gap: 16px; border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+        .feature-card .icon-wrap {
+            width: 46px; height: 46px; border-radius: 10px; background: rgba(13, 110, 253, 0.1); color: #0d6efd;
+            display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0;
+        }
+        .feature-card h4 { font-size: 1.05rem; margin-bottom: 4px; color: #1e293b; }
+        .feature-card p { font-size: 0.88rem; color: #475569; line-height: 1.5; }
+        .helpdesk-footer {
+            background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(10px); border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 16px 20px; text-align: center; font-size: 0.9rem; color: #475569; display: flex; justify-content: center; gap: 25px; flex-wrap: wrap;
+        }
+        .helpdesk-footer span { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+        .helpdesk-footer i { color: #0d6efd; }
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.55); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: white; padding: 28px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); width: 100%; max-width: 450px; text-align: left; }
+        .modal-card h3 { margin-bottom: 5px; color: #1e293b; font-size: 1.3rem; text-align: center; }
+        .modal-card .modal-subtitle { font-size: 0.9rem; color: #64748b; margin-bottom: 20px; text-align: center; }
+        .form-group-modal { margin-bottom: 15px; }
+        .form-group-modal label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
+        .modal-card input, .modal-card select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; outline: none; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; padding: 11px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; border: none; }
+        .btn-confirm { background-color: #0d6efd; color: white; }
+        .btn-cancel { background-color: #e2e8f0; color: #475569; }
+        .track-result-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+        .track-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; margin-top: 6px; }
+        .track-pending { background: #fef3c7; color: #b45309; }
+        .track-progress { background: #e0f2fe; color: #0369a1; }
+        .track-done { background: #dcfce7; color: #15803d; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand"><i class="fa-solid fa-laptop-medical"></i><span>IT Repair Service</span></div>
+        <div class="system-status-badge"><span class="status-dot"></span><span>ระบบพร้อมให้บริการ (Online)</span></div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="hero-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <h1 class="hero-title">ระบบแจ้งซ่อมคอมพิวเตอร์ออนไลน์</h1>
+        <p class="hero-subtitle">แจ้งปัญหาอุปกรณ์ไอที โน้ตบุ๊ก ปริ้นเตอร์ หรือระบบเครือข่ายภายในองค์กรได้อย่างรวดเร็ว ติดตามสถานะได้ทันทีโดยทีมงานมืออาชีพ</p>
+        
+        <div class="hero-buttons">
+            <a href="index.html" class="btn-main btn-primary-custom"><i class="fa-solid fa-pen-to-square"></i> แจ้งซ่อมคอมพิวเตอร์</a>
+            <button type="button" onclick="openAdminModal()" class="btn-main btn-outline-custom"><i class="fa-solid fa-lock"></i> เข้าสู่ระบบเจ้าหน้าที่ (Admin)</button>
+        </div>
+
+        <div class="quick-track-box">
+            <input type="text" id="quickTrackInput" placeholder="พิมพ์ชื่อผู้แจ้ง หรือ อุปกรณ์ เพื่อเช็กสถานะงานซ่อม..." onkeydown="if(event.key==='Enter') trackRepairStatus()">
+            <button type="button" onclick="trackRepairStatus()"><i class="fa-solid fa-magnifying-glass"></i> เช็กสถานะ</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-pill"><div class="num" id="homeTotalCount">0</div><div class="label">รายการทั้งหมด</div></div>
+            <div class="stat-pill"><div class="num yellow" id="homePendingCount">0</div><div class="label">รอดำเนินการ</div></div>
+            <div class="stat-pill"><div class="num green" id="homeDoneCount">0</div><div class="label">ซ่อมเสร็จแล้ว</div></div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card"><div class="icon-wrap"><i class="fa-solid fa-bolt"></i></div><div><h4>รวดเร็ว ทันใจ</h4><p>ระบบบันทึกและส่งข้อมูลแจ้งเตือนตรงถึงเจ้าหน้าที่ไอทีทันที</p></div></div>
+            <div class="feature-card"><div class="icon-wrap"><i class="fa-solid fa-shield-halved"></i></div><div><h4>ตรวจสอบสถานะได้</h4><p>ติดตามความคืบหน้างานซ่อม ดูประวัติและรายละเอียดได้แม่นยำ</p></div></div>
+            <div class="feature-card"><div class="icon-wrap"><i class="fa-solid fa-user-tie"></i></div><div><h4>ทีมช่างมืออาชีพ</h4><p>ดูแลและวิเคราะห์ปัญหาโดยผู้เชี่ยวชาญด้านไอทีโดยตรง</p></div></div>
+            <div class="feature-card"><div class="icon-wrap"><i class="fa-solid fa-headset"></i></div><div><h4>รองรับเคสเร่งด่วน</h4><p>สามารถแนบภาพถ่ายอาการเสียเพื่อให้เข้าแก้ไขได้ทันท่วงที</p></div></div>
+        </div>
+    </div>
+
+    <footer class="helpdesk-footer">
+        <span><i class="fa-solid fa-phone-volume"></i> โทรด่วนฝ่าย IT: 1234 (ภายใน)</span>
+        <span><i class="fa-solid fa-envelope"></i> it-support@company.co.th</span>
+        <span><i class="fa-regular fa-clock"></i> เวลาทำการ: จันทร์ - ศุกร์ (08:30 - 17:30 น.)</span>
+    </footer>
+
+    <!-- Modal Admin Login -->
+    <div id="adminModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3><i class="fa-solid fa-lock" style="color: #0d6efd;"></i> เข้าสู่ระบบเจ้าหน้าที่</h3>
+            <p class="modal-subtitle">กรุณาระบุข้อมูลและรหัสผ่านเพื่อเข้าจัดการระบบ</p>
+            <div class="form-group-modal">
+                <label><i class="fa-solid fa-user-gear"></i> ระดับผู้ใช้งาน</label>
+                <select id="adminRole">
+                    <option value="it_support">เจ้าหน้าที่ไอที (IT Support)</option>
+                    <option value="it_manager">หัวหน้าแผนกไอที (IT Manager)</option>
+                </select>
+            </div>
+            <div class="form-group-modal">
+                <label><i class="fa-solid fa-key"></i> รหัสผ่านเจ้าหน้าที่</label>
+                <input type="password" id="adminPassword" placeholder="กรอกรหัสผ่าน (เช่น 1234)" onkeydown="if(event.key==='Enter') verifyPassword()">
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeAdminModal()">ยกเลิก</button>
+                <button type="button" class="btn-confirm" onclick="verifyPassword()">เข้าสู่ระบบ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Track Status -->
+    <div id="trackModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3><i class="fa-solid fa-clipboard-list" style="color: #0d6efd;"></i> ผลการตรวจสอบสถานะ</h3>
+            <p class="modal-subtitle" id="trackSearchKeyword">รายการที่ค้นหา</p>
+            <div id="trackResultList"></div>
+            <div class="modal-buttons"><button type="button" class="btn-confirm" onclick="closeTrackModal()">ปิดหน้าต่าง</button></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const requests = JSON.parse(localStorage.getItem('repairRequests')) || [];
+            document.getElementById('homeTotalCount').textContent = requests.length;
+            const done = requests.filter(r => r.status === 'เสร็จสิ้น' || r.status === 'Completed').length;
+            document.getElementById('homePendingCount').textContent = requests.length - done;
+            document.getElementById('homeDoneCount').textContent = done;
+        });
+
+        function trackRepairStatus() {
+            const keyword = document.getElementById('quickTrackInput').value.trim().toLowerCase();
+            if (!keyword) { alert('กรุณาพิมพ์ชื่อผู้แจ้ง หรือ ชื่ออุปกรณ์ครับ'); return; }
+            const requests = JSON.parse(localStorage.getItem('repairRequests')) || [];
+            const matched = requests.filter(item => (item.name && item.name.toLowerCase().includes(keyword)) || (item.device && item.device.toLowerCase().includes(keyword)));
+            const resultContainer = document.getElementById('trackResultList');
+            document.getElementById('trackSearchKeyword').textContent = `คำค้นหา: "${document.getElementById('quickTrackInput').value}" (พบ ${matched.length} รายการ)`;
+            if (matched.length === 0) {
+                resultContainer.innerHTML = `<p style="text-align:center; color:#64748b; padding: 20px 0;">ไม่พบข้อมูลการแจ้งซ่อม</p>`;
+            } else {
+                resultContainer.innerHTML = matched.map(item => `
+                    <div class="track-result-item">
+                        <div style="font-weight: 600; color: #1e293b;">${item.device || '-'} - คุณ${item.name || '-'}</div>
+                        <div style="font-size: 0.85rem; color: #475569; margin-top: 3px;">อาการ: ${item.issue || '-'}</div>
+                        <span class="track-badge ${item.status === 'เสร็จสิ้น' ? 'track-done' : 'track-pending'}">สถานะ: ${item.status || 'รอดำเนินการ'}</span>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('trackModal').classList.add('active');
+        }
+
+        function closeTrackModal() { document.getElementById('trackModal').classList.remove('active'); }
+        function openAdminModal() { document.getElementById('adminModal').classList.add('active'); document.getElementById('adminPassword').focus(); }
+        function closeAdminModal() { document.getElementById('adminModal').classList.remove('active'); document.getElementById('adminPassword').value = ''; }
+        function verifyPassword() {
+            if (document.getElementById('adminPassword').value === "1234") {
+                localStorage.setItem('adminRole', document.getElementById('adminRole').value);
+                window.location.href = "admin.html";
+            } else { alert("รหัสผ่านไม่ถูกต้อง!"); document.getElementById('adminPassword').value = ''; }
+        }
+    </script>
+</body>
+</html>
